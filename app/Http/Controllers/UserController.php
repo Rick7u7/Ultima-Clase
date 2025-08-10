@@ -247,14 +247,15 @@ class UserController extends Controller
 
 
     }
-    
+
     public function listUsers(){
         if (!Auth::check()) {
-            // Verifica si el usuario NO está autenticado
             return redirect()->route('/')->withErrors('Debe iniciar sesión.');
         }
 
         $user = Auth::user();
+
+        $usuarios = User::with('rol')->get(); // ← Incluye relación con rol
 
         $datos = [
             'textos' => [
@@ -276,7 +277,8 @@ class UserController extends Controller
 
         return view('backoffice/users/list', [
             'datos' => $datos,
-            'user' => $user
+            'user' => $user,
+            'users' => $usuarios // ← Aquí pasas la lista de usuarios
         ]);
     }
 }
