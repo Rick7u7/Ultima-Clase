@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('nombre')->unique();
-            $table->boolean('activo');
+            $table->boolean('activo')->default(true);
             $table->timestamps();
         });
     }

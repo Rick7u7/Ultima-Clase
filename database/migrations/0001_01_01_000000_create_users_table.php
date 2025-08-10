@@ -17,11 +17,12 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('rut')->unique();
             $table->string('password');
-            $table->string('rol')->default('common');
+            $table->foreignId('rol_id')->constrained('roles')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
             $table->boolean('activo')->default(true);
-        });
+        });        
+        
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('rut')->primary();

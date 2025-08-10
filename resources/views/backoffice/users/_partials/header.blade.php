@@ -20,7 +20,7 @@
                               class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
                               <li class="list-inline-item d-flex gap-2 align-items-center">
                                 <i class="icon-base ti tabler-palette icon-lg"></i
-                                ><span class="fw-medium">{{ $user->rol }}</span>
+                                ><span class="fw-medium">{{ $user->rol->nombre }}</span>
                               </li>
                               <li class="list-inline-item d-flex gap-2 align-items-center">
                                 <i class="icon-base ti tabler-map-pin icon-lg"></i

@@ -461,7 +461,7 @@
                           </div>
                           <div class="flex-grow-1">
                             <h6 class="mb-0">{{ $user->name}} {{ $user->lastname }}</h6>
-                            <small class="text-body-secondary">{{ $user->rol }}</small>
+                            <small class="text-body-secondary">{{ $user->rol->nombre }}</small>
                           </div>
                         </div>
                       </a>
