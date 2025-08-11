@@ -18,7 +18,7 @@ class RolesController extends Controller
 
         $user = Auth::user();
 
-        $lista = RolesModel::all();
+        $roles = RolesModel::all();
 
         $datos = [
             'textos' => [
@@ -78,7 +78,7 @@ class RolesController extends Controller
         return view('backoffice/roles/index', [
             'datos' => $datos,
             'user' => $user,
-            'lista' => $lista
+            'roles' => $roles
         ]);
     }
 }

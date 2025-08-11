@@ -16,8 +16,8 @@ class RolesModel extends Model
         'activo',
     ];
     
-    public function users()
+    public function usuarios()
     {
-        return $this->hasMany(User::class, 'rol');
+        return $this->hasMany(User::class, 'rol_id'); // Ajusta 'rol_id' si tu columna se llama distinto
     }
 }

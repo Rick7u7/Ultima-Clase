@@ -9,41 +9,41 @@
         </p>
         <!-- Role cards -->
         <div class="row g-6">
-            <div class="col-xl-4 col-lg-6 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h6 class="fw-normal mb-0 text-body">Total 4 users</h6>
-                            <ul class="list-unstyled d-flex align-items-center avatar-group mb-0">
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    title="Vinnie Mostowy" class="avatar pull-up">
-                                    <img class="rounded-circle" src="/vuexy/assets/img/avatars/5.png" alt="Avatar" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    title="Allen Rieske" class="avatar pull-up">
-                                    <img class="rounded-circle" src="/vuexy/assets/img/avatars/12.png" alt="Avatar" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    title="Julee Rossignol" class="avatar pull-up">
-                                    <img class="rounded-circle" src="/vuexy/assets/img/avatars/6.png" alt="Avatar" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    title="Kaith D'souza" class="avatar pull-up">
-                                    <img class="rounded-circle" src="/vuexy/assets/img/avatars/3.png" alt="Avatar" />
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-end">
-                            <div class="role-heading">
-                                <h5 class="mb-1">Administrator</h5>
-                                <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#addRoleModal"
-                                    class="role-edit-modal"><span>Edit Role</span></a>
-                            </div>
-                            <a href="javascript:void(0);"><i class="icon-base ti tabler-copy icon-md text-heading"></i></a>
-                        </div>
+        @foreach ($roles as $rol)
+    <div class="col-xl-4 col-lg-6 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="fw-normal mb-0 text-body">
+                        Total {{ $rol->usuarios->count() }} usuarios
+                    </h6>
+                    <ul class="list-unstyled d-flex align-items-center avatar-group mb-0">
+                        @foreach ($rol->usuarios->take(4) as $usuario)
+                            <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                title="{{ $usuario->name }}" class="avatar pull-up">
+                                <img class="rounded-circle"
+                                     src="{{ $usuario->avatar_url ?? '/vuexy/assets/img/avatars/default.png' }}"
+                                     alt="Avatar" />
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="d-flex justify-content-between align-items-end">
+                    <div class="role-heading">
+                        <h5 class="mb-1">{{ $rol->nombre }}</h5>
+                        <a href="javascript:;" data-bs-toggle="modal"
+                           data-bs-target="#editRoleModal-{{ $rol->id }}"
+                           class="role-edit-modal"><span>Editar Rol</span></a>
                     </div>
+                    <a href="javascript:void(0);">
+                        <i class="icon-base ti tabler-copy icon-md text-heading"></i>
+                    </a>
                 </div>
             </div>
+        </div>
+    </div>
+@endforeach
+
             
             <div class="col-xl-4 col-lg-6 col-md-6">
                 <div class="card h-100">
