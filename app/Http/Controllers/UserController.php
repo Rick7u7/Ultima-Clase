@@ -278,7 +278,7 @@ class UserController extends Controller
         return view('backoffice/users/list', [
             'datos' => $datos,
             'user' => $user,
-            'users' => $usuarios // ← Aquí pasas la lista de usuarios
+            'users' => $usuarios
         ]);
     }
 }

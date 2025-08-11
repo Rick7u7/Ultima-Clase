@@ -17,24 +17,24 @@
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                        @foreach ($users as $user)
-                            <tr>
-                                <td>{{ $user->name }} {{ $user->lastname }}</td>
-                                <td>{{ $user->rut }}</td>
-                                <td>{{ $user->rol->nombre ?? 'Sin rol' }}</td>
-                                <td>
-                                    @if ($user->activo)
-                                        <span class="badge bg-success">Activo</span>
-                                    @else
-                                        <span class="badge bg-danger">Inactivo</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-primary">Editar</a>
-                                    <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
-                                </td>
-                            </tr>
-                        @endforeach
+                    @foreach ($users as $usuario)
+                        <tr>
+                            <td>{{ $usuario->name }} {{ $usuario->lastname }}</td>
+                            <td>{{ $usuario->rut }}</td>
+                            <td>{{ $usuario->rol->nombre ?? 'Sin rol' }}</td>
+                            <td>
+                                @if ($usuario->activo)
+                                    <span class="badge bg-success">Activo</span>
+                                @else
+                                    <span class="badge bg-danger">Inactivo</span>
+                                @endif
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-primary">Editar</a>
+                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>

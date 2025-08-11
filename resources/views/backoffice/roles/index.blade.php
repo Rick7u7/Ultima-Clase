@@ -18,14 +18,16 @@
                         Total {{ $rol->usuarios->count() }} usuarios
                     </h6>
                     <ul class="list-unstyled d-flex align-items-center avatar-group mb-0">
-                        @foreach ($rol->usuarios->take(4) as $usuario)
-                            <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                title="{{ $usuario->name }}" class="avatar pull-up">
-                                <img class="rounded-circle"
-                                     src="{{ $usuario->avatar_url ?? '/vuexy/assets/img/avatars/default.png' }}"
-                                     alt="Avatar" />
-                            </li>
-                        @endforeach
+                    @foreach ($rol->usuarios->take(4) as $usuario)
+                        @php
+                            $initial = strtoupper(substr($usuario->name, 0, 1));
+                            $avatarPath = "assets/avatars/letters/{$initial}.jpg";
+                        @endphp
+                        <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                            title="{{ $usuario->name }}" class="avatar pull-up">
+                            <img src="{{ asset($avatarPath) }}" alt="{{ $usuario->name }}" class="rounded-circle" />
+                        </li>
+                    @endforeach
                     </ul>
                 </div>
                 <div class="d-flex justify-content-between align-items-end">

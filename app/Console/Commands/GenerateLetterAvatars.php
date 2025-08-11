@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManager;
 
 class GenerateLetterAvatars extends Command
 {
@@ -19,10 +19,17 @@ class GenerateLetterAvatars extends Command
             File::makeDirectory($outputPath, 0755, true);
         }
 
-        $fontPath = public_path('fonts/DejaVuSans-Bold.ttf'); // Cambia si tienes otra fuente
+        $fontPath = public_path('fonts/STENCIL.TTF');
+
+        if (!File::exists($fontPath)) {
+            $this->error("❌ Fuente no encontrada: {$fontPath}");
+            return;
+        }
+
+        $manager = new ImageManager('gd');
 
         foreach (range('A', 'Z') as $letter) {
-            $img = Image::canvas(256, 256, '#f0f0f0');
+            $img = $manager->canvas(256, 256, '#f0f0f0');
 
             $img->text($letter, 128, 128, function ($font) use ($fontPath) {
                 $font->file($fontPath);
@@ -33,10 +40,9 @@ class GenerateLetterAvatars extends Command
             });
 
             $img->save("{$outputPath}/{$letter}.png");
-            $this->info("Generado: {$letter}.png");
+            $this->info("🖼️ Generado: {$letter}.png");
         }
 
         $this->info('✅ Avatares generados correctamente.');
     }
 }
-
