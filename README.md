@@ -43,3 +43,13 @@ Migrar la base de datos
 php artisan migrate
 ```
 Preguntará si queremos crear la base de datos sqlite, respondemos YES
+
+---
+
+# Cambios realizados al modal
+
+Integracion de la variable select en case(2) para variedad en las opciones.
+
+# Integracion de scripts
+ 
+Se integraron scripts en los index para permitir la edicion de modelos.
