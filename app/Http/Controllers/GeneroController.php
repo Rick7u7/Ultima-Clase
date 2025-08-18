@@ -37,6 +37,15 @@ class GeneroController extends Controller
                 ],
                 'fields' => [
                     [
+                        'label' => 'Icono',
+                        'name' => 'icono',
+                        'required' => true,
+                        'control' => [
+                            'element' => 'select',
+                            'options' => ['♂', '♀', 'Otro']
+                        ],
+                    ],
+                    [
                         'label' => 'Nombre',
                         'name' => 'nombre',
                         'required' => true,
@@ -47,17 +56,6 @@ class GeneroController extends Controller
                             'min' => 3,
                             'max' => 50,
                             'placeholder' => 'Ej: Masculino, Femenino, Otro'
-                        ],
-                    ],
-                    [
-                        'label' => 'Icono',
-                        'name' => 'icono',
-                        'required' => true,
-                        'control' => [
-                            'element' => 'input',
-                            'type' => 'text',
-                            'classList' => ['form-control', 'mb-4'],
-                            'placeholder' => 'Ej: 🎭, url o texto'
                         ],
                     ],
                 ]

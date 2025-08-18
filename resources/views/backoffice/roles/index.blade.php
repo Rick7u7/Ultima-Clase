@@ -136,7 +136,7 @@
             'titulo' => $datos['mantenedor']['titulo'],
             'instruccion' => $datos['mantenedor']['instruccion'],
             'accion' => 'new',
-            'ruta' => $datos['mantenedor']['routes']['new'],
+            'ruta' => route($datos['mantenedor']['routes']['new']),
             'campos' => $datos['mantenedor']['fields'],
         ])
         @endcomponent

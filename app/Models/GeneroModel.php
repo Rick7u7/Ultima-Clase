@@ -12,7 +12,7 @@ class GeneroModel extends Model
     protected $table = 'genero';
 
     protected $fillable = [
-        'nombre',
-        'icono' 
+        'icono',
+        'nombre' 
     ];
 }

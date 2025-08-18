@@ -13,8 +13,8 @@ class CreateGeneroTable extends Migration
     {
         Schema::create('genero', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 50);
             $table->string('icono')->nullable();
+            $table->string('nombre', 50);
             $table->timestamps();
         });
     }

@@ -15,7 +15,6 @@
                 <form action="{{ $ruta }}" method="post" id="form-detalles">
                     @csrf
                     <div id="method-edit"></div> <!-- Aquí insertaremos @method('PUT') dinámicamente -->
-
                     @foreach ($campos as $campo)
                         @switch($campo['control']['element'])
                             @case('input')

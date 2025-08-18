@@ -21,16 +21,16 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
                         <th>Icono</th>
+                        <th>Nombre</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($lista as $genero)
                         <tr>
-                            <td>{{ $genero->nombre }}</td>
                             <td>{{ $genero->icono }}</td>
+                            <td>{{ $genero->nombre }}</td>
                             <td>
                                 <button type="button" 
                                     class="btn btn-warning btn-sm btn-edit-genero" 
@@ -77,8 +77,8 @@
 
         editButtons.forEach(button => {
             button.addEventListener('click', function () {
-                form.querySelector('[name="nombre"]').value = this.dataset.nombre;
                 form.querySelector('[name="icono"]').value = this.dataset.icono;
+                form.querySelector('[name="nombre"]').value = this.dataset.nombre;
 
                 form.action = `/backoffice/genero/${this.dataset.id}`;
                 methodContainer.innerHTML = '<input type="hidden" name="_method" value="PUT">';
