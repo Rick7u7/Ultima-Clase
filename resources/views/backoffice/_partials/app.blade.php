@@ -175,6 +175,8 @@
 
     <!-- Page JS -->
     <script src="/vuexy/assets/js/app-user-view-account.js"></script>
+    <!-- Scripts Globales -->
+    @yield('scripts')
+    @stack('scripts')
 </body>
-
 </html>
