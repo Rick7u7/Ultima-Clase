@@ -34,6 +34,8 @@ class DetallesRecintoController extends Controller
                     'new' => 'backoffice.detallesrecinto.store',
                     'update' => 'backoffice.detallesrecinto.update',
                     'delete' => 'backoffice.detallesrecinto.destroy',
+                    'up' => 'backoffice.detallesrecinto.up',
+                    'down' => 'backoffice.detallesrecinto.down'
                 ],
                 'fields' => [
                     [
@@ -54,8 +56,12 @@ class DetallesRecintoController extends Controller
                         'name' => 'tipo_superficie',
                         'required' => true,
                         'control' => [
-                            'element' => 'select',
-                            'options' => ['Césped natural', 'Césped sintético', 'Mixto']
+                            'element' => 'input',
+                            'type' => 'text',
+                            'classList' => ['form-control', 'mb-4'],
+                            'min' => 3,
+                            'max' => 100,
+                            'placeholder' => 'Ej: Césped',
                         ],
                     ],
                     [
@@ -66,7 +72,9 @@ class DetallesRecintoController extends Controller
                             'element' => 'input',
                             'type' => 'number',
                             'min' => 0,
-                            'classList' => ['form-control', 'mb-4']
+                            'max' => null,
+                            'classList' => ['form-control', 'mb-4'],
+                            'placeholder' => null,
                         ],
                     ],
                     [
@@ -77,6 +85,9 @@ class DetallesRecintoController extends Controller
                             'element' => 'input',
                             'type' => 'number',
                             'min' => 0,
+                            'max' => null,
+                            'classList' => ['form-control', 'mb-4'],
+                            'placeholder' => null,
                         ],
                     ],
                     [
@@ -87,6 +98,9 @@ class DetallesRecintoController extends Controller
                             'element' => 'input',
                             'type' => 'number',
                             'min' => 0,
+                            'max' => null,
+                            'classList' => ['form-control', 'mb-4'],
+                            'placeholder' => null,
                         ],
                     ],
                     [
@@ -97,6 +111,9 @@ class DetallesRecintoController extends Controller
                             'element' => 'input',
                             'type' => 'number',
                             'min' => 0,
+                            'max' => null,
+                            'classList' => ['form-control', 'mb-4'],
+                            'placeholder' => null,
                         ],
                     ],
                     [
@@ -107,17 +124,39 @@ class DetallesRecintoController extends Controller
                             'element' => 'input',
                             'type' => 'number',
                             'min' => 0,
+                            'max' => null,
+                            'classList' => ['form-control', 'mb-4'],
+                            'placeholder' => null,
                         ],
                     ],
-                ]
-            ],
-            'dev' => [
-                'nombre' => 'Instituto Profesional San Sebastián',
-                'url' => 'https://www.ipss.cl',
-                'logo' => 'https://ipss.cl/wp-content/uploads/2025/04/cropped-LogoIPSS_sello50anos_webipss.png'
+                ],
+    'access' => [   // 👈 ahora está al mismo nivel
+        'editableIn' => [
+            'new' => true,
+            'edit' => true,
+            'show' => false,
+            'up' => false,
+            'down' => false,
+            'delete' => false
+        ],
+        'readIn' => [
+            'new' => true,
+            'edit' => true,
+            'show' => true,
+            'up' => true,
+            'down' => true,
+            'delete' => true
+            ]
+            ]
+        ],
+        'dev' => [
+            'nombre' => 'Instituto Profesional San Sebastián',
+            'url' => 'https://www.ipss.cl',
+            'logo' => 'https://ipss.cl/wp-content/uploads/2025/04/cropped-LogoIPSS_sello50anos_webipss.png'
             ]
         ];
-
+        
+        
         return view('backoffice/DetallesRecinto/index', compact('datos', 'user', 'lista'));
     }
 
@@ -140,6 +179,40 @@ class DetallesRecintoController extends Controller
         DetallesRecinto::create($request->all());
 
         return redirect()->back()->with('success', 'Detalles del recinto creados exitosamente.');
+    }
+    public function down(Request $request, $_id)
+    {
+        if (!Auth::check()) {
+            // Verifica si el usuario NO está autenticado
+            return redirect()->route('/')->withErrors('Debe iniciar sesión.');
+        }
+        $user = Auth::user();
+
+        $buscado = DetallesRecinto::find($_id);
+
+        if ($buscado->activo == 1) {
+            $buscado->activo = 0;
+            $buscado->save();
+            return redirect()->back()->with('success', ':) Recinto apagado exitosamente.');
+        }
+        return redirect()->back()->withErrors('No se realizaron Cambios.');
+    }
+    public function up(Request $request, $_id)
+    {
+        if (!Auth::check()) {
+            // Verifica si el usuario NO está autenticado
+            return redirect()->route('/')->withErrors('Debe iniciar sesión.');
+        }
+        $user = Auth::user();
+
+        $buscado = DetallesRecinto::find($_id);
+
+        if ($buscado->activo == 0) {
+            $buscado->activo = 1;
+            $buscado->save();
+            return redirect()->back()->with('success', ':) Recinto encendido exitosamente.');
+        }
+        return redirect()->back()->withErrors('No se realizaron Cambios.');
     }
 
     public function update(Request $request, $id)

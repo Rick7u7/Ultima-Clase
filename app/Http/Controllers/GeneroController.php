@@ -31,9 +31,11 @@ class GeneroController extends Controller
                 'titulo' => 'Géneros',
                 'instruccion' => 'Dime tu género.',
                 'routes' => [
-                    'new' => 'backoffice.genero.store',
+                    'new'    => 'backoffice.genero.store',
                     'update' => 'backoffice.genero.update',
                     'delete' => 'backoffice.genero.destroy',
+                    'up'     => 'backoffice.genero.up',
+                    'down'   => 'backoffice.genero.down',
                 ],
                 'fields' => [
                     [
@@ -41,8 +43,12 @@ class GeneroController extends Controller
                         'name' => 'icono',
                         'required' => true,
                         'control' => [
-                            'element' => 'select',
-                            'options' => ['♂', '♀', 'Otro']
+                            'element' => 'input',
+                            'type' => 'text',
+                            'classList' => ['form-control', 'mb-4'],
+                            'min' => 3,
+                            'max' => 50,
+                            'placeholder' => 'Ej: ♂, ♀, Otro'
                         ],
                     ],
                     [
@@ -58,7 +64,25 @@ class GeneroController extends Controller
                             'placeholder' => 'Ej: Masculino, Femenino, Otro'
                         ],
                     ],
-                ]
+                ],
+                'access' => [   // 👈 ahora está al mismo nivel
+                    'editableIn' => [
+                        'new' => true,
+                        'edit' => true,
+                        'show' => false,
+                        'up' => false,
+                        'down' => false,
+                        'delete' => false
+                    ],
+                    'readIn' => [
+                        'new' => true,
+                        'edit' => true,
+                        'show' => true,
+                        'up' => true,
+                        'down' => true,
+                        'delete' => true
+                    ]
+                ],
             ],
             'dev' => [
                 'nombre' => 'Instituto Profesional San Sebastián',
@@ -107,6 +131,41 @@ class GeneroController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Género actualizado exitosamente.');
+    }
+
+    public function down(Request $request, $_id)
+    {
+        if (!Auth::check()) {
+            // Verifica si el usuario NO está autenticado
+            return redirect()->route('/')->withErrors('Debe iniciar sesión.');
+        }
+        $user = Auth::user();
+
+        $buscado = GeneroModel::find($_id);
+
+        if ($buscado->activo == 1) {
+            $buscado->activo = 0;
+            $buscado->save();
+            return redirect()->back()->with('success', ':) Genero apagado exitosamente.');
+        }
+        return redirect()->back()->withErrors('No se realizaron Cambios.');
+    }
+    public function up(Request $request, $_id)
+    {
+        if (!Auth::check()) {
+            // Verifica si el usuario NO está autenticado
+            return redirect()->route('/')->withErrors('Debe iniciar sesión.');
+        }
+        $user = Auth::user();
+
+        $buscado = GeneroModel::find($_id);
+
+        if ($buscado->activo == 0) {
+            $buscado->activo = 1;
+            $buscado->save();
+            return redirect()->back()->with('success', ':) Genero encendido exitosamente.');
+        }
+        return redirect()->back()->withErrors('No se realizaron Cambios.');
     }
 
     public function destroy($id)

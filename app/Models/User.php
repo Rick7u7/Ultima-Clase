@@ -61,4 +61,9 @@ class User extends Authenticatable
             }
         });
     }
+
+    public function persona()
+    {
+        return $this->hasOne(PersonaModel::class, 'user_id');
+    }
 }

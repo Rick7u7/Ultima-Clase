@@ -19,5 +19,6 @@ class DetallesRecinto extends Model
         'vestidores',
         'banos_publico',
         'estacionamiento',
+        'activo'
     ];
 }

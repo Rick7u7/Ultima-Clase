@@ -12,7 +12,7 @@
 
                 <hr>
 
-                <form action="{{ $ruta }}" method="post" id="form-detalles">
+                <form action="{{ Route::has($ruta) ? route($ruta) : url('/') }}" method="post">
                     @csrf
                     <div id="method-edit"></div> <!-- Aquí insertaremos @method('PUT') dinámicamente -->
                     @foreach ($campos as $campo)
@@ -32,16 +32,25 @@
                                     @if(isset($campo['control']['min'])) min="{{ $campo['control']['min'] }}" @endif
                                     @if(isset($campo['control']['max'])) max="{{ $campo['control']['max'] }}" @endif>
                                 @break
-                            @case('select')
-                                <label class="form-label" for="{{ $campo['name'] }}">{{ $campo['label'] }}</label>
-                                <select 
-                                    name="{{ $campo['name'] }}" 
-                                    id="{{ $campo['name'] }}" 
-                                    class="form-select mb-4">
-                                    @foreach($campo['control']['options'] as $option)
-                                        <option value="{{ $option }}">{{ $option }}</option>
-                                    @endforeach
-                                </select>
+                                @case('select')
+                                    <label class="form-label" for="{{ $campo['name'] }}">{{ $campo['label'] }}</label>
+                                    <select 
+                                        name="{{ $campo['name'] }}" 
+                                        id="{{ $campo['name'] }}" 
+                                        class="form-select mb-4"
+                                        @if(empty($campo['control']['options']) || collect($campo['control']['options'])->where('label', '!=', 'undefined')->isEmpty()) disabled @endif>
+                                        
+                                        @if(empty($campo['control']['options']) || collect($campo['control']['options'])->where('label', '!=', 'undefined')->isEmpty())
+                                            <option value="" disabled selected>Sin géneros disponibles</option>
+                                        @else
+                                            <option value="" disabled selected>Seleccione una opción</option>
+                                            @foreach($campo['control']['options'] as $option)
+                                                @if($option['label'] !== 'undefined')
+                                                    <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </select>
                                 @break
                         @endswitch
                     @endforeach

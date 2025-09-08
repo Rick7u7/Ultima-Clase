@@ -4,20 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGeneroTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('genero', function (Blueprint $table) {
+        Schema::create('entrenador', function (Blueprint $table) {
             $table->id();
-            $table->string('icono')->nullable();
-            $table->string('nombre', 50);
+            $table->foreignId('persona_id')->unique()->constrained('persona')->onDelete('cascade');
+            $table->string('nivel');
             $table->boolean('activo')->default(true);
             $table->timestamps();
-        });
+        });        
     }
 
     /**
@@ -25,6 +25,6 @@ class CreateGeneroTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('genero');
+        Schema::dropIfExists('entrenador');
     }
-}
+};

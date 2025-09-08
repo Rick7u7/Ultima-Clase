@@ -15,60 +15,91 @@
         </button>
     </div>
 
-    <!-- Tabla de detalles -->
-    <div class="card">
-        <div class="card-datatable p-3">
-            <table class="table table-striped">
-                <thead>
+    <!-- Tabla de Detalles del Recinto -->
+<div class="card">
+    <div class="card-datatable table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Ubicación</th>
+                    <th>Tipo Superficie</th>
+                    <th>Capacidad</th>
+                    <th>Graderías</th>
+                    <th>Vestidores</th>
+                    <th>Baños</th>
+                    <th>Estacionamiento</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if ($lista->isEmpty())
                     <tr>
-                        <th>Ubicación</th>
-                        <th>Tipo Superficie</th>
-                        <th>Capacidad</th>
-                        <th>Graderías</th>
-                        <th>Vestidores</th>
-                        <th>Baños</th>
-                        <th>Estacionamiento</th>
-                        <th>Acciones</th>
+                        <td colspan="10" class="text-center">Sin Registros</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach($lista as $detalle)
+                @else
+                    @foreach ($lista as $item)
                         <tr>
-                            <td>{{ $detalle->ubicacion }}</td>
-                            <td>{{ $detalle->tipo_superficie }}</td>
-                            <td>{{ $detalle->capacidad_espectadores }}</td>
-                            <td>{{ $detalle->graderias }}</td>
-                            <td>{{ $detalle->vestidores }}</td>
-                            <td>{{ $detalle->banos_publico }}</td>
-                            <td>{{ $detalle->estacionamiento }}</td>
-                            <td>
-                                <button type="button" 
-                                    class="btn btn-warning btn-sm btn-edit-detalle" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#addRoleModal"
-                                    data-id="{{ $detalle->id }}"
-                                    data-ubicacion="{{ $detalle->ubicacion }}"
-                                    data-tipo_superficie="{{ $detalle->tipo_superficie }}"
-                                    data-capacidad="{{ $detalle->capacidad_espectadores }}"
-                                    data-graderias="{{ $detalle->graderias }}"
-                                    data-vestidores="{{ $detalle->vestidores }}"
-                                    data-banos="{{ $detalle->banos_publico }}"
-                                    data-estacionamiento="{{ $detalle->estacionamiento }}">
-                                    Editar
-                                </button>
-                                <form action="{{ route('backoffice.detallesrecinto.destroy', $detalle->id) }}" method="POST" style="display:inline;">
+                            <td class="text-center">{{ $item->id }}</td>
+                            <td class="text-center">{{ $item->ubicacion }}</td>
+                            <td class="text-center">{{ $item->tipo_superficie }}</td>
+                            <td class="text-center">{{ $item->capacidad_espectadores }}</td>
+                            <td class="text-center">{{ $item->graderias }}</td>
+                            <td class="text-center">{{ $item->vestidores }}</td>
+                            <td class="text-center">{{ $item->banos_publico }}</td>
+                            <td class="text-center">{{ $item->estacionamiento }}</td>
+                            <td class="text-center">
+                                @if ($item->activo == 1)
+                                    <span class="badge bg-success">Activo</span>
+                                @else
+                                    <span class="badge bg-danger">Desactivado</span>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                @if ($item->activo == 1)
+                                    <!-- Botón desactivar -->
+                                    <form action="{{ route($datos['mantenedor']['routes']['down'], $item->id) }}" 
+                                          method="POST" class="d-inline-block">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="this.disabled=true; this.innerHTML='<i class=\'ti ti-loader spin\'></i>'; this.form.submit();">
+                                            <i class="icon-base ti tabler-arrow-down"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <!-- Botón activar -->
+                                    <form action="{{ route($datos['mantenedor']['routes']['up'], $item->id) }}" 
+                                          method="POST" class="d-inline-block">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-primary"
+                                            onclick="this.disabled=true; this.innerHTML='<i class=\'ti ti-loader spin\'></i>'; this.form.submit();">
+                                            <i class="icon-base ti tabler-arrow-up"></i>
+                                        </button>
+                                    </form>
+                                @endif
+
+                                <!-- Botón eliminar -->
+                                <form action="{{ route($datos['mantenedor']['routes']['delete'], $item->id) }}" 
+                                      method="POST" class="d-inline-block"
+                                      onsubmit="return confirm('¿Está seguro de eliminar este detalle del recinto?')">
                                     @csrf
-                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        Eliminar
+                                    </button>
                                 </form>
                             </td>
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
+                @endif
+            </tbody>
+        </table>
     </div>
+</div>
+<!--/ Tabla de Detalles del Recinto -->
 
-    <!-- Modal para agregar/editar detalles -->
+
+    <!-- Modal para agregar detalles -->
     @component('backoffice._partials.modal', [
         'titulo' => $datos['mantenedor']['titulo'],
         'instruccion' => $datos['mantenedor']['instruccion'],
@@ -79,40 +110,3 @@
     @endcomponent
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    const rutaCrear = "{{ route('backoffice.detallesrecinto.store') }}";
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const editButtons = document.querySelectorAll('.btn-edit-detalle');
-        const form = document.getElementById('form-detalles');
-        const methodContainer = document.getElementById('method-edit');
-        const submitBtn = document.getElementById('btn-submit-detalle');
-
-        editButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                form.querySelector('[name="ubicacion"]').value = this.dataset.ubicacion;
-                form.querySelector('[name="tipo_superficie"]').value = this.dataset.tipo_superficie;
-                form.querySelector('[name="capacidad_espectadores"]').value = this.dataset.capacidad;
-                form.querySelector('[name="graderias"]').value = this.dataset.graderias;
-                form.querySelector('[name="vestidores"]').value = this.dataset.vestidores;
-                form.querySelector('[name="banos_publico"]').value = this.dataset.banos;
-                form.querySelector('[name="estacionamiento"]').value = this.dataset.estacionamiento;
-
-                // Ruta de actualización con método PUT
-                form.action = `/backoffice/detalles-recinto/${this.dataset.id}`;
-                methodContainer.innerHTML = '<input type="hidden" name="_method" value="PUT">';
-                submitBtn.textContent = 'Actualizar';
-            });
-        });
-
-        document.querySelector('[data-bs-target="#addRoleModal"]').addEventListener('click', function () {
-            form.reset();
-            form.action = rutaCrear;
-            methodContainer.innerHTML = '';
-            submitBtn.textContent = 'Guardar';
-        });
-    });
-</script>
-@endpush

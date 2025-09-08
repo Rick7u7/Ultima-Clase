@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('ubicacion');
             $table->string('tipo_superficie');
-            $table->integer('capacidad_espectadores');
+            $table->integer('capacidad_espectadores')->default(0);
             $table->boolean('graderias')->default(0);
             $table->boolean('vestidores')->default(0);
             $table->boolean('banos_publico')->default(0);
             $table->boolean('estacionamiento')->default(0);
+            $table->boolean('activo')->default(true);
             $table->timestamps();
         });
     }

@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GeneroModel extends Model
+class EntrenadorModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'genero';
+    protected $table = 'entrenador';
 
     protected $fillable = [
-        'icono',
-        'nombre',
+        'persona_id',
+        'nivel',
         'activo'
     ];
     
-    public function usuarios()
+    public function persona()
     {
-        return $this->hasMany(User::class, 'genero_id');
+        return $this->belongsTo(PersonaModel::class, 'persona_id');
     }
 }
