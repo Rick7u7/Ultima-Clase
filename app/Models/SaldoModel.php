@@ -5,23 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EntrenadorModel extends Model
+class SaldoModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'entrenador';
+    protected $table = 'saldo';
 
     protected $fillable = [
         'persona_id',
-        'nivel',
-        'certificacion',
-        'activo'
+        'monto',
+        'estado', // 'atrasado', 'pendiente', 'pagado'
     ];
 
-    protected $casts = [
-        'certificacion' => 'array', // 👈 convierte JSON en array
-    ];
-    
+    /**
+     * Relación inversa: un saldo puede estar asociado a una persona.
+     */
     public function persona()
     {
         return $this->belongsTo(PersonaModel::class, 'persona_id');

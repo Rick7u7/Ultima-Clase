@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('persona', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
-            $table->foreignId('genero_id')->nullable()->constrained('genero')->onDelete('set null');
             $table->string('correo')->unique();
             $table->string('telefono')->nullable();
             $table->string('direccion')->nullable();
-            $table->string('nacionalidad')->nullable();
+            $table->foreignId('comunaId')->constrained('comunas')->onDelete('cascade');
+            $table->foreignId('nacionalidadId')->constrained('nacionalidad')->onDelete('cascade');
             $table->integer('edad')->nullable();
             $table->timestamps();
         });        

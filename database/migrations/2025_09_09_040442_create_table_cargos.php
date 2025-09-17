@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('entrenador', function (Blueprint $table) {
+        Schema::create('cargos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('persona_id');
-            $table->string('nivel');
-            $table->json('certificacion'); // 👈 importante: JSON
+            $table->string('nombre')->unique();
             $table->boolean('activo')->default(true);
             $table->timestamps();
-        
-            $table->foreign('persona_id')->references('id')->on('persona');
-        });       
+        });
     }
 
     /**
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('entrenador');
+        Schema::dropIfExists('cargos');
     }
 };

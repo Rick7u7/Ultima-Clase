@@ -135,6 +135,16 @@
                 <label for="rut" class="form-label">Rut</label>
                 <input type="text" class="form-control" id="rut" name="rut" placeholder="Ingrese su RUT" required="required" value="12345678-9" />
               </div>
+              <div class="mb-6 form-control-validation">
+                <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="fechaNacimiento"
+                  name="fechaNacimiento"
+                  required
+                  value="{{ old('fechaNacimiento') }}" />
+              </div>
               <div class="mb-6 form-password-toggle form-control-validation">
                 <label class="form-label" for="password">Contraseña</label>
                 <div class="input-group input-group-merge">

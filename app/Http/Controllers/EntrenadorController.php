@@ -6,8 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\EntrenadorModel;
 use App\Models\GeneroModel;
+use App\Models\CargosModel;
+use App\Models\ComunasModel;
+use App\Models\NacionalidadModel;
 use Illuminate\Support\Facades\DB;
 use App\Services\PersonaService;
+use Illuminate\Validation\Rule;
 
 class EntrenadorController extends Controller
 {
@@ -18,18 +22,42 @@ class EntrenadorController extends Controller
         }
 
         $user = Auth::user();
-        $lista = EntrenadorModel::with('persona.user', 'persona.genero')->get();
+        $lista = EntrenadorModel::with('persona.user.genero')->get();
         $generos = GeneroModel::all();
-        $opcionesGenero = $generos->isNotEmpty()
-            ? $generos->map(fn($g) => ['value' => $g->id, 'label' => $g->nombre])->toArray()
-            : [
-                ['value' => 0, 'label' => 'Sin géneros disponibles'],
-            ];
+        $cargos = CargosModel::all();
+        $comunas = ComunasModel::all();
+        $nacionalidades = NacionalidadModel::all();
+        $opcionesGenero = $generos->map(fn($g) => [
+            'value' => $g->id,
+            'label' => $g->nombre
+        ])->toArray();
+        $opcionesComuna = $comunas->map(fn($g) => [
+            'value' => $g->id,
+            'label' => $g->nombre
+        ])->toArray();
+        $opcionesNacionalidad = $nacionalidades->map(fn($g) => [
+            'value' => $g->id,
+            'label' => $g->nombre
+        ])->toArray();
         $niveles = [
             ['value' => '1', 'label' => 'Principiante'],
             ['value' => '2', 'label' => 'Intermedio'],
             ['value' => '3', 'label' => 'Avanzado'],
         ];
+        $certificaciones = [
+            ['value' => '1', 'label' => 'UEFA C'],
+            ['value' => '2', 'label' => 'UEFA B'],
+            ['value' => '3', 'label' => 'UEFA A'],
+            ['value' => '4', 'label' => 'UEFA Pro'],
+            ['value' => '5', 'label' => 'CONMEBOL C'],
+            ['value' => '6', 'label' => 'CONMEBOL B'],
+            ['value' => '7', 'label' => 'CONMEBOL A'],
+            ['value' => '8', 'label' => 'CONMEBOL Pro'],
+        ];
+        $certificacionesMap = collect($certificaciones)
+            ->pluck('label', 'value')
+            ->mapWithKeys(fn($label, $value) => [(string) $value => $label])
+            ->toArray();
         $datos = [
             'textos' => [
                 'titulo' => 'Iniciar Sesión | Sonkei FC',
@@ -89,29 +117,30 @@ class EntrenadorController extends Controller
                         ],
                     ],
                     [
-                        'label' => 'Edad',
-                        'name' => 'edad',
+                        'label' => 'Fecha de Nacimiento',
+                        'name' => 'fechaNacimiento',
                         'required' => true,
                         'control' => [
                             'element' => 'input',
-                            'type' => 'number',
-                            'min' => 0,
+                            'type' => 'date',
+                            'min' => null,
                             'max' => null,
                             'classList' => ['form-control', 'mb-4'],
                             'placeholder' => null,
-                        ],
+                        ]
                     ],
                     [
                         'label' => 'Género',
-                        'name' => 'genero_id',
+                        'name' => 'generoId',
                         'required' => true,
                         'control' => [
                             'element' => 'select',
                             'classList' => ['form-select', 'mb-4'],
                             'options' => $opcionesGenero,
-                            'placeholder' => 'Seleccione género'
+                            'disabled' => $generos->isEmpty(), // ← desactiva el select si no hay géneros
+                            'placeholder' => $generos->isEmpty() ? 'Sin registros' : 'Seleccione género'
                         ],
-                    ],
+                    ],                   
                     [
                         'label' => 'Telefono',
                         'name' => 'telefono',
@@ -152,16 +181,41 @@ class EntrenadorController extends Controller
                         ],
                     ],
                     [
-                        'label' => 'Nacionalidad',
-                        'name' => 'nacionalidad',
-                        'required' => false,
+                        'label' => 'Comuna',
+                        'name' => 'comunaId',
+                        'required' => true,
                         'control' => [
-                            'element' => 'input',
-                            'type' => 'text',
-                            'classList' => ['form-control', 'mb-4'],
-                            'placeholder' => 'Chile'
+                            'element' => 'select',
+                            'classList' => ['form-select', 'mb-4'],
+                            'options' => $opcionesComuna,
+                            'disabled' => $comunas->isEmpty(),
+                            'placeholder' => $comunas->isEmpty() ? 'Sin registros' : 'Seleccione Comuna'
                         ],
-                    ],                                       
+                    ],  
+                    [
+                        'label' => 'Nacionalidad',
+                        'name' => 'nacionalidadId',
+                        'required' => true,
+                        'control' => [
+                            'element' => 'select',
+                            'classList' => ['form-select', 'mb-4'],
+                            'options' => $opcionesNacionalidad,
+                            'disabled' => $cargos->isEmpty(), // ← desactiva el select si no hay cargos
+                            'placeholder' => $cargos->isEmpty() ? 'Sin registros' : 'Seleccione cargo'
+                        ],
+                    ],  
+                    [
+                        'label' => 'Certificaciones',
+                        'name' => 'certificacion[]', // 👈 importante: [] para recibir array
+                        'required' => true,
+                        'control' => [
+                            'element' => 'select',
+                            'classList' => ['form-select', 'mb-4'],
+                            'options' => $certificaciones, // ej: [['value' => 'UEFA A', 'label' => 'UEFA A'], ...]
+                            'placeholder' => 'Seleccione los niveles',
+                            'attributes' => ['multiple' => true] // 👈 marcamos que es multiple
+                        ],
+                    ],                                                                            
                     [
                         'label' => 'Nivel',
                         'name' => 'nivel',
@@ -193,14 +247,19 @@ class EntrenadorController extends Controller
                     ]
                 ],
             ],
+            'certificacionesMap' => $certificacionesMap,
             'dev' => [
                 'nombre' => 'Instituto Profesional San Sebastián',
                 'url' => 'https://www.ipss.cl',
                 'logo' => 'https://ipss.cl/wp-content/uploads/2025/04/cropped-LogoIPSS_sello50anos_webipss.png'
             ]
         ];
-
-        return view('backoffice/entrenador/index', compact('datos', 'user', 'lista'));
+        return view('backoffice.entrenador.index', [
+            'datos' => $datos,
+            'certificacionesMap' => $certificacionesMap,
+            'lista' => $lista,
+            'user' => $user,
+        ]);        
     }
 
     public function store(Request $request)
@@ -209,31 +268,56 @@ class EntrenadorController extends Controller
             return redirect()->route('/')->withErrors('Debe iniciar sesión.');
         }
 
+        // Certificaciones disponibles
+        $certificaciones = [
+            ['value' => '1', 'label' => 'UEFA C'],
+            ['value' => '2', 'label' => 'UEFA B'],
+            ['value' => '3', 'label' => 'UEFA A'],
+            ['value' => '4', 'label' => 'UEFA Pro'],
+            ['value' => '5', 'label' => 'CONMEBOL C'],
+            ['value' => '6', 'label' => 'CONMEBOL B'],
+            ['value' => '7', 'label' => 'CONMEBOL A'],
+            ['value' => '8', 'label' => 'CONMEBOL Pro'],
+        ];
+        $certificacionValues = array_column($certificaciones, 'value');
+
+        // Validación estándar
         $request->validate([
-            'nombre'       => ['required', 'string', 'min:3', 'max:50'],
-            'apellido'     => ['required', 'string', 'min:2', 'max:50'],
-            'rut'          => ['required', 'string', 'unique:users,rut'],
-            'edad'         => ['nullable', 'integer', 'min:0'],
-            'genero_id'    => ['nullable', 'exists:genero,id'],
-            'telefono'     => ['nullable', 'string', 'min:3'],
-            'correo'       => ['required', 'email', 'unique:persona,correo'],
-            'direccion'    => ['required', 'string', 'min:3', 'max:100'],
-            'nacionalidad' => ['nullable', 'string', 'max:50'],
-            'nivel'        => ['required'],
+            'nombre'          => ['required', 'string', 'min:3', 'max:50'],
+            'apellido'        => ['required', 'string', 'min:2', 'max:50'],
+            'rut'             => ['required', 'string', 'unique:users,rut'],
+            'generoId'        => ['required', Rule::exists('genero', 'id')],
+            'fechaNacimiento' => ['required', 'date'],
+            'telefono'        => ['required', 'string', 'min:3'],
+            'correo'          => ['required', 'email', 'unique:persona,correo'],
+            'direccion'       => ['required', 'string', 'min:3', 'max:100'],
+            'comunaId'       => ['required', Rule::exists('comunas', 'id')],
+            'nacionalidadId' => ['required', Rule::exists('nacionalidad', 'id')],
+            'nivel'           => ['required'],
+            'certificacion'   => ['required', 'array'],
+            'certificacion.*' => ['string', Rule::in($certificacionValues)],
         ], $this->messages);
 
-        // Si no se seleccionó género, usar el ID de "undefined"
-        $generoId = $request->input('genero_id');
-        if (empty($generoId)) {
-            $generoId = DB::table('genero')->where('nombre', 'undefined')->value('id');
+        // 🔒 Forzar cargo como "Entrenador"
+        $cargoEntrenadorId = DB::table('cargos')
+            ->where('nombre', 'Entrenador')
+            ->value('id');
+
+        if (!$cargoEntrenadorId) {
+            return redirect()->back()->withErrors([
+                'cargoId' => 'No se encontró el cargo "Entrenador" en la base de datos.'
+            ]);
         }
 
         // Preparar datos para el servicio
         $data = $request->only([
-            'nombre', 'apellido', 'rut', 'edad', 'telefono',
-            'correo', 'direccion', 'nacionalidad', 'nivel'
+            'nombre', 'apellido', 'rut', 'fechaNacimiento', 'telefono',
+            'correo', 'direccion', 'nivel', 'certificacion'
         ]);
-        $data['genero_id'] = $generoId;
+        $data['comunaId'] = $request->comunaId;
+        $data['nacionalidadId'] = $request->nacionalidadId;
+        $data['cargoId'] = $cargoEntrenadorId; // 👈 Asignado directamente
+        $data['generoId'] = $request->generoId;
 
         // Crear persona y usuario mediante el servicio
         $personaService = app(PersonaService::class);
@@ -241,9 +325,10 @@ class EntrenadorController extends Controller
 
         // Crear entrenador vinculado a la persona
         EntrenadorModel::create([
-            'persona_id' => $persona->id,
-            'nivel'      => $data['nivel'],
-            'activo'     => true,
+            'persona_id'    => $persona->id,
+            'nivel'         => $data['nivel'],
+            'certificacion' => $data['certificacion'], // se guarda como JSON
+            'activo'        => true,
         ]);
 
         return redirect()->back()->with('success', 'Entrenador creado exitosamente.');
@@ -257,21 +342,19 @@ class EntrenadorController extends Controller
 
         $request->validate([
             'nombre' => ['required', 'string', 'min:3', 'max:50'],
-            'edad' => ['nullable', 'integer', 'min:0'],
-            'genero_id' => ['required'],
-            'telefono' => ['nullable', 'string', 'min:0'],
+            'telefono' => ['required', 'string', 'min:0'],
             'correo' => ['required', 'email'],
             'nivel' => ['required'],
+            'certificacion' => ['required'],
         ], $this->messages);
 
         $entrenador = EntrenadorModel::findOrFail($id);
         $entrenador->update([
             'nombre' => $request->nombre,
-            'edad' => $request->edad,
-            'genero_id' => $request->genero_id,
             'telefono' => $request->telefono,
             'correo' => $request->correo,
             'nivel' => $request->nivel,
+            'certificacion' => $request->certificacion,
         ]);
 
         return redirect()->back()->with('success', 'Entrenador actualizado exitosamente.');

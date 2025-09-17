@@ -14,7 +14,9 @@
 
                 <form action="{{ Route::has($ruta) ? route($ruta) : url('/') }}" method="post">
                     @csrf
-                    <div id="method-edit"></div> <!-- Aquí insertaremos @method('PUT') dinámicamente -->
+                    @if(isset($accion) && $accion === 'update')
+                        @method('PUT')
+                    @endif
                     @foreach ($campos as $campo)
                         @switch($campo['control']['element'])
                             @case('input')
@@ -23,7 +25,7 @@
                                     type="{{ $campo['control']['type'] }}" 
                                     name="{{ $campo['name'] }}"
                                     id="{{ $campo['name'] }}"
-                                    value="{{ $campo['value'] ?? ($campo['control']['type'] === 'number' ? 0 : '') }}"
+                                    value="{{ old($campo['name'], $campo['value'] ?? ($campo['control']['type'] === 'number' ? 0 : '')) }}"
                                     class="form-control mb-3 
                                         @if(isset($campo['control']['classList'])) 
                                             @foreach ($campo['control']['classList'] as $class){{ $class }} @endforeach 
@@ -32,31 +34,42 @@
                                     @if(isset($campo['control']['min'])) min="{{ $campo['control']['min'] }}" @endif
                                     @if(isset($campo['control']['max'])) max="{{ $campo['control']['max'] }}" @endif>
                                 @break
-                                @case('select')
-                                    <label class="form-label" for="{{ $campo['name'] }}">{{ $campo['label'] }}</label>
-                                    <select 
-                                        name="{{ $campo['name'] }}" 
-                                        id="{{ $campo['name'] }}" 
-                                        class="form-select mb-4"
-                                        @if(empty($campo['control']['options']) || collect($campo['control']['options'])->where('label', '!=', 'undefined')->isEmpty()) disabled @endif>
-                                        
-                                        @if(empty($campo['control']['options']) || collect($campo['control']['options'])->where('label', '!=', 'undefined')->isEmpty())
-                                            <option value="" disabled selected>Sin géneros disponibles</option>
-                                        @else
-                                            <option value="" disabled selected>Seleccione una opción</option>
-                                            @foreach($campo['control']['options'] as $option)
-                                                @if($option['label'] !== 'undefined')
-                                                    <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
-                                                @endif
-                                            @endforeach
+                            @case('select')
+                                <label class="form-label" for="{{ $campo['name'] }}">{{ $campo['label'] }}</label>
+                                <select 
+                                    name="{{ $campo['name'] }}" 
+                                    id="{{ $campo['name'] }}" 
+                                    class="form-select mb-4
+                                        @if(isset($campo['control']['classList'])) 
+                                            @foreach ($campo['control']['classList'] as $class){{ $class }} @endforeach 
+                                        @endif"
+                                    @if(isset($campo['control']['attributes']))
+                                        @foreach($campo['control']['attributes'] as $attr => $val)
+                                            {{ $attr }}="{{ $val }}"
+                                        @endforeach
+                                    @endif
+                                    @if(empty($campo['control']['options']) || collect($campo['control']['options'])->where('label', '!=', 'undefined')->isEmpty()) disabled @endif>
+
+                                    @if(empty($campo['control']['options']) || collect($campo['control']['options'])->where('label', '!=', 'undefined')->isEmpty())
+                                        <option value="" disabled selected>Sin opciones disponibles</option>
+                                    @else
+                                        @if(!isset($campo['control']['attributes']['multiple']))
+                                            <option value="" disabled>Seleccione una opción</option>
                                         @endif
-                                    </select>
+                                        @foreach($campo['control']['options'] as $option)
+                                            @if($option['label'] !== 'undefined')
+                                                <option value="{{ $option['value'] }}"
+                                                    @if(isset($campo['value']) && $campo['value'] == $option['value']) selected @endif>
+                                                    {{ $option['label'] }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </select>
                                 @break
                         @endswitch
                     @endforeach
-
                     <hr>
-
                     <button type="submit" class="btn btn-primary" id="btn-submit-detalle">Guardar</button>
                 </form>
             </div>

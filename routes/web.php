@@ -4,9 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\CargosController;
 use App\Http\Controllers\GeneroController;
 use App\Http\Controllers\DetallesRecintoController;
 use App\Http\Controllers\EntrenadorController;
+use App\Http\Controllers\JugadoresController;
+use App\Http\Controllers\SaldoController;
 
 Route::get('/', function () {
     return view('landing/index');
@@ -34,6 +37,12 @@ Route::post('/backoffice/roles/down/{_id}', [RolesController::class, 'down'])->n
 Route::post('/backoffice/roles/up/{_id}', [RolesController::class, 'up'])->name('backoffice.roles.up');
 Route::post('/backoffice/roles/destroy/{_id}', [RolesController::class, 'destroy'])->name('backoffice.roles.destroy');
 
+Route::get('/backoffice/cargos', [CargosController::class, 'index'])->name('backoffice.cargos.index');
+Route::post('/backoffice/cargos', [CargosController::class, 'store'])->name('backoffice.cargos.new');
+Route::post('/backoffice/cargos/down/{_id}', [CargosController::class, 'down'])->name('backoffice.cargos.down');
+Route::post('/backoffice/cargos/up/{_id}', [CargosController::class, 'up'])->name('backoffice.cargos.up');
+Route::post('/backoffice/cargos/destroy/{_id}', [CargosController::class, 'destroy'])->name('backoffice.cargos.destroy');
+
 Route::get('/backoffice/user/list', [UserController::class, 'listUsers'])->name('backoffice.user.list');
 
 // Géneros
@@ -55,3 +64,15 @@ Route::get('/backoffice/entrenador', [EntrenadorController::class, 'index'])->na
 Route::post('/backoffice/entrenador', [EntrenadorController::class, 'store'])->name('backoffice.entrenador.store');
 Route::post('/backoffice/entrenador/down/{_id}', [EntrenadorController::class, 'down'])->name('backoffice.entrenador.down');
 Route::post('/backoffice/entrenador/up/{_id}', [EntrenadorController::class, 'up'])->name('backoffice.entrenador.up');
+
+// Jugadores: Paula, Indira, Javiera
+
+Route::get('/backoffice/jugadores', [JugadoresController::class, 'index'])->name('backoffice.jugadores.index');
+Route::post('/backoffice/jugadores', [JugadoresController::class, 'store'])->name('backoffice.jugadores.new');
+Route::post('/backoffice/jugadores/down/{_id}', [JugadoresController::class, 'down'])->name('backoffice.jugadores.down');
+Route::post('/backoffice/jugadores/up/{_id}', [JugadoresController::class, 'up'])->name('backoffice.jugadores.up');
+Route::post('/backoffice/jugadores/destroy/{_id}', [JugadoresController::class, 'destroy'])->name('backoffice.jugadores.destroy');
+
+// Saldos
+Route::get('/backoffice/saldo', [SaldoController::class, 'index'])->name('backoffice.saldo.index');
+Route::put('/backoffice/saldo/{id}', [SaldoController::class, 'update'])->name('backoffice.saldo.update');

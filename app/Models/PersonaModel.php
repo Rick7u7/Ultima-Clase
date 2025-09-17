@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class PersonaModel extends Model
 {
@@ -15,15 +16,36 @@ class PersonaModel extends Model
         'user_id',
         'edad',
         'correo',
-        'genero_id',
         'telefono',
         'direccion',
-        'nacionalidad'
+        'comunaId',
+        'nacionalidadId',
+        'oficiosId',
     ];
     
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function comuna()
+    {
+        return $this->belongsTo(ComunasModel::class, 'comunaId');
+    }
+
+    public function nacionalidad()
+    {
+        return $this->belongsTo(NacionalidadModel::class, 'nacionalidadId');
+    }
+
+    public function oficio()
+    {
+        return $this->belongsTo(OficiosModel::class, 'oficiosId');
+    }
+    
+    public function jugadores()
+    {
+        return $this->hasOne(JugadoresModel::class, 'persona_id');
     }
     
     public function entrenador()
@@ -31,8 +53,8 @@ class PersonaModel extends Model
         return $this->hasOne(EntrenadorModel::class, 'persona_id');
     }
     
-    public function genero()
+    public function saldo()
     {
-        return $this->belongsTo(GeneroModel::class, 'genero_id');
-    }    
+        return $this->hasOne(SaldoModel::class, 'persona_id');
+    }
 }

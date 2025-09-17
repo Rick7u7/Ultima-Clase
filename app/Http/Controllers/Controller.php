@@ -50,5 +50,44 @@ abstract class Controller
 
         'estacionamiento.integer' => 'El estacionamiento debe ser un número entero.',
         'estacionamiento.min' => 'El estacionamiento no puede ser negativo.',
+
+        // Entrenador - Validación de creación
+        'nombre.required'       => 'El nombre del entrenador es obligatorio.',
+        'nombre.string'         => 'El nombre debe ser texto.',
+        'nombre.min'            => 'El nombre debe tener al menos 3 caracteres.',
+        'nombre.max'            => 'El nombre no puede superar los 50 caracteres.',
+
+        'apellido.required'     => 'El apellido del entrenador es obligatorio.',
+        'apellido.string'       => 'El apellido debe ser texto.',
+        'apellido.min'          => 'El apellido debe tener al menos 2 caracteres.',
+        'apellido.max'          => 'El apellido no puede superar los 50 caracteres.',
+
+        'rut.required'          => 'El RUT es obligatorio.',
+        'rut.string'            => 'El RUT debe ser una cadena de texto.',
+        'rut.unique'            => 'Este RUT ya está registrado. Verifica que no esté duplicado.',
+
+        'edad.integer'          => 'La edad debe ser un número entero.',
+        'edad.min'              => 'La edad no puede ser negativa.',
+
+        'genero_id.required'    => 'Debe seleccionar un género.',
+        'genero_id.exists'      => 'El género seleccionado no es válido.',
+
+        'telefono.string'       => 'El teléfono debe ser una cadena de texto.',
+        'telefono.min'          => 'El teléfono debe tener al menos 3 caracteres.',
+
+        'correo.required'       => 'El correo electrónico es obligatorio.',
+        'correo.email'          => 'El correo debe tener un formato válido.',
+        'correo.unique'         => 'Este correo ya está registrado en otra persona.',
+
+        'direccion.required'    => 'La dirección es obligatoria.',
+        'direccion.string'      => 'La dirección debe ser texto.',
+        'direccion.min'         => 'La dirección debe tener al menos 3 caracteres.',
+        'direccion.max'         => 'La dirección no puede superar los 100 caracteres.',
+
+        'nacionalidad.required' => 'La nacionalidad es obligatoria.',
+        'nacionalidad.string'   => 'La nacionalidad debe ser texto.',
+        'nacionalidad.max'      => 'La nacionalidad no puede superar los 50 caracteres.',
+
+        'nivel.required'        => 'Debe seleccionar un nivel de experiencia.',
     ];
 }

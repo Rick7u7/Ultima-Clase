@@ -130,6 +130,25 @@
                           <i class="icon-base ti tabler-crown icon-lg"></i><span class="fw-medium mx-2">Rol:</span>
                           <span>{{ $user->rol->nombre }}</span>
                         </li>
+                        <!-- Sueldo y Estado -->
+                        @php
+                            $saldo = optional($user->persona->saldo);
+                        @endphp
+                        <li class="d-flex align-items-center mb-4">
+                          <i class="icon-base ti tabler-currency-dollar icon-lg"></i>
+                          <span class="fw-medium mx-2">Sueldo:</span>
+                          <span>${{ number_format($saldo->monto ?? 0, 0, ',', '.') }}</span>
+                          <span class="ms-3 badge 
+                            @switch($saldo->estado)
+                              @case('pagado') bg-success @break
+                              @case('pendiente') bg-warning text-dark @break
+                              @case('atrasado') bg-danger @break
+                              @default bg-secondary
+                            @endswitch">
+                            {{ $saldo->estado ?? 'Sin estado' }}
+                          </span>
+                        </li>
+                        <!-- Sueldo y Estado -->
                         <li class="d-flex align-items-center mb-4">
                           <i class="icon-base ti tabler-flag icon-lg"></i><span class="fw-medium mx-2">Country:</span>
                           <span>USA</span>

@@ -15,9 +15,17 @@ class User extends Authenticatable
         'lastname',
         'rut',
         'password',
-        'rol_id', // ← este es el correcto
-    ];    
+        'cargoId',
+        'generoId',
+        'fechaNacimiento',
+        'rol_id'
+    ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -61,6 +69,16 @@ class User extends Authenticatable
             }
         });
     }
+    
+    public function cargo()
+    {
+        return $this->belongsTo(CargosModel::class, 'cargoId');
+    }
+
+    public function genero()
+    {
+        return $this->belongsTo(GeneroModel::class, 'generoId');
+    }    
 
     public function persona()
     {
