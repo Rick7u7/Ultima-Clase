@@ -641,4 +641,17 @@ class UserController extends Controller
             'users' => $usuarios
         ]);
     }
+
+    public function showSaldo()
+{
+    $user = Auth::user();
+    $persona = $user->persona;
+
+    $saldos = $persona
+        ? $persona->saldos()->orderByDesc('año')->orderByDesc('mes')->get()
+        : collect(); // colección vacía si no hay persona
+
+    return view('backoffice.users.saldo', compact('user', 'persona', 'saldos'));
+}
+
 }

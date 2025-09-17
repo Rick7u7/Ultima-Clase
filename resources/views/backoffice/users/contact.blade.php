@@ -128,7 +128,7 @@
                         </li>
                         <li class="d-flex align-items-center mb-4">
                           <i class="icon-base ti tabler-crown icon-lg"></i><span class="fw-medium mx-2">Rol:</span>
-                          <span>{{ $user->rol }}</span>
+                          <span>{{ $user->rol->nombre }}</span>
                         </li>
                         <li class="d-flex align-items-center mb-4">
                           <i class="icon-base ti tabler-flag icon-lg"></i><span class="fw-medium mx-2">Country:</span>

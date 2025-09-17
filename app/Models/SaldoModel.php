@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon; // ← ESTA LÍNEA ES CLAVE
 
 class SaldoModel extends Model
 {
@@ -15,6 +16,8 @@ class SaldoModel extends Model
         'persona_id',
         'monto',
         'estado', // 'atrasado', 'pendiente', 'pagado'
+        'mes',
+        'año'
     ];
 
     /**
@@ -24,4 +27,13 @@ class SaldoModel extends Model
     {
         return $this->belongsTo(PersonaModel::class, 'persona_id');
     }
+
+    /**
+     * Devuelve el nombre del mes en formato legible.
+     */
+    public function nombreMes(): string
+    {
+        return Carbon::create()->month($this->mes)->translatedFormat('F');
+    }
 }
+

@@ -28,6 +28,7 @@ Route::get('/backoffice/user/profile', [UserController::class, 'showPerfil'])->n
 Route::get('/backoffice/user/contact', [UserController::class, 'showContacto'])->name('backoffice.user.contact');
 Route::get('/backoffice/user/security', [UserController::class, 'showSeguridad'])->name('backoffice.user.security');
 Route::post('/backoffice/user/security', [UserController::class, 'cambiarClave'])->name('backoffice.user.security.changePass');
+Route::get('/backoffice/user/saldo', [UserController::class, 'showSaldo'])->name('backoffice.user.saldo');
 
 Route::post('/backoffice/logout', [UserController::class, 'logout'])->name('logout');
 
@@ -74,5 +75,6 @@ Route::post('/backoffice/jugadores/up/{_id}', [JugadoresController::class, 'up']
 Route::post('/backoffice/jugadores/destroy/{_id}', [JugadoresController::class, 'destroy'])->name('backoffice.jugadores.destroy');
 
 // Saldos
-Route::get('/backoffice/saldo', [SaldoController::class, 'index'])->name('backoffice.saldo.index');
-Route::put('/backoffice/saldo/{id}', [SaldoController::class, 'update'])->name('backoffice.saldo.update');
+Route::get('/backoffice/saldo', [SaldoController::class, 'index'])->name('backoffice.saldos.index');
+Route::post('/backoffice/saldo', [SaldoController::class, 'store'])->name('backoffice.saldos.new');
+Route::put('/backoffice/saldo/{id}', [SaldoController::class, 'update'])->name('backoffice.saldos.update');

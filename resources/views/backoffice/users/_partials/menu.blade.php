@@ -29,6 +29,15 @@
                           ><i class="icon-base ti tabler-layout-grid icon-sm me-1_5"></i> Seguridad</a
                         >
                       </li>
+                      <li class="nav-item">
+                        <a class="nav-link
+                        @if (strtolower(Route::currentRouteName()) == strtolower('Backoffice.User.Saldo'))
+                        active
+                        @endif
+                        " href="{{ route('backoffice.user.saldo') }}"
+                          ><i class="menu-icon icon-base ti tabler-coin"></i> Pagos</a
+                        >
+                      </li>
                     </ul>
                   </div>
                 </div>

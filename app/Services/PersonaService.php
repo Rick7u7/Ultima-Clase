@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Models\PersonaModel;
-use App\Models\SaldoModel;
 use Carbon\Carbon;
 
 class PersonaService
@@ -36,13 +35,6 @@ class PersonaService
             'edad' => $edad,
         ]);
 
-        // 💰 Crear saldo vinculado a la persona
-        $persona->saldo()->create([
-            'monto' => 0,
-            'estado' => 'pendiente',
-        ]);
-
         return $persona;
     }
 }
-

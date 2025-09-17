@@ -185,7 +185,7 @@
         </li>
         @if(Auth::check() && optional(Auth::user()->cargo)->nombre === 'Entrenador')
             <li class="menu-item">
-                <a href="{{ route('backoffice.saldo.index') }}" class="menu-link">
+                <a href="{{ route('backoffice.saldos.index') }}" class="menu-link">
                     <i class="menu-icon icon-base ti tabler-coin"></i>
                     <div>Saldos</div>
                 </a>

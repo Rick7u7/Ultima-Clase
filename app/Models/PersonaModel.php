@@ -53,8 +53,9 @@ class PersonaModel extends Model
         return $this->hasOne(EntrenadorModel::class, 'persona_id');
     }
     
-    public function saldo()
+    public function saldos()
     {
-        return $this->hasOne(SaldoModel::class, 'persona_id');
+        return $this->hasMany(SaldoModel::class, 'persona_id');
     }
+
 }

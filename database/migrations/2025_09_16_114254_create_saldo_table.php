@@ -10,11 +10,24 @@ return new class extends Migration
     {
         Schema::create('saldo', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('persona_id')->unique()->constrained('persona')->onDelete('cascade');
+
+            // Relación con persona (sin unique)
+            $table->foreignId('persona_id')->constrained('persona')->onDelete('cascade');
+
+            // Periodo de pago
+            $table->unsignedTinyInteger('mes');  // 1–12
+            $table->unsignedSmallInteger('año'); // Ej: 2025
+
+            // Datos del saldo
             $table->decimal('monto', 10, 2)->default(0);
             $table->enum('estado', ['pendiente', 'pagado', 'atrasado'])->default('pendiente');
+
+            // Timestamps
             $table->timestamps();
-        });           
+
+            // Índice único por persona y periodo
+            $table->unique(['persona_id', 'mes', 'año'], 'saldo_persona_mes_anio_unique');
+        });
     }
 
     public function down()
@@ -22,3 +35,4 @@ return new class extends Migration
         Schema::dropIfExists('saldo');
     }
 };
+

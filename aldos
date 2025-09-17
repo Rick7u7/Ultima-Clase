@@ -1,0 +1,16 @@
+[90m= [39m[34;4mApp\Models\PersonaModel[39;24m {#5290
+    [34mid[39m: [35m1[39m,
+    [34muser_id[39m: [35m2[39m,
+    [34mcorreo[39m: "[32masdasd@gmail.com[39m",
+    [34mtelefono[39m: "[32m912345678[39m",
+    [34mdireccion[39m: "[32mloquesea[39m",
+    [34mcomunaId[39m: [35m1[39m,
+    [34mnacionalidadId[39m: [35m3[39m,
+    [34medad[39m: [35m19[39m,
+    [34mcreated_at[39m: "[32m2025-09-17 18:42:53[39m",
+    [34mupdated_at[39m: "[32m2025-09-17 18:42:53[39m",
+    [34msaldos[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#1361
+      [34mall[39m: [],
+    },
+  }
+

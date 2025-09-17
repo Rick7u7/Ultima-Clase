@@ -18,6 +18,7 @@
                         @method('PUT')
                     @endif
                     @foreach ($campos as $campo)
+                        @if(isset($campo['control']) && isset($campo['control']['element']))
                         @switch($campo['control']['element'])
                             @case('input')
                                 <label class="form-label" for="{{ $campo['name'] }}">{{ $campo['label'] }}</label>
@@ -68,6 +69,7 @@
                                 </select>
                                 @break
                         @endswitch
+                        @endif
                     @endforeach
                     <hr>
                     <button type="submit" class="btn btn-primary" id="btn-submit-detalle">Guardar</button>

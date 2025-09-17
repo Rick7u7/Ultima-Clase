@@ -32,7 +32,7 @@ class JugadoresController extends Controller
 
         $lista = JugadoresModel::with([
             'persona.user.genero',
-            'persona.saldo',
+            'persona.saldos',
             'persona.oficio',
             'persona.nacionalidad',
             'piernaDominante',
